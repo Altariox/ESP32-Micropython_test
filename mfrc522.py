@@ -1,7 +1,5 @@
 from machine import Pin, SPI
 from os import uname
-
-
 class MFRC522:
 
 	OK = 0
@@ -14,38 +12,22 @@ class MFRC522:
 	AUTHENT1B = 0x61
 
 	def __init__(self, sck, mosi, miso, rst, cs):
-
-		# Store pin objects
-		self.sck = Pin(sck, Pin.OUT)
-		self.mosi = Pin(mosi, Pin.OUT)
-		self.miso = Pin(miso)
-		self.rst = Pin(rst, Pin.OUT)
-		self.cs = Pin(cs, Pin.OUT)
-
-		# Keep RC522 in reset during SPI setup
-		self.rst.value(0)
-		self.cs.value(1)
-
-		board = uname()[0].lower()  # sysname (e.g. 'esp32', 'esp8266')
-
-		# Platform specific SPI initialisation
-		if board in ('wipy', 'lopy', 'fipy'):
-			self.spi = SPI(0)
-			self.spi.init(SPI.MASTER, baudrate=1000000, pins=(self.sck, self.mosi, self.miso))
-		elif board == 'esp8266':
-			# ESP8266 default SPI
-			self.spi = SPI(baudrate=1000000, polarity=0, phase=0, sck=self.sck, mosi=self.mosi, miso=self.miso)
-			self.spi.init()
-		elif board == 'esp32':
-			# For ESP32 we use VSPI (id=2) with typical RC522 wiring: SCK18 MOSI23 MISO19
-			# If your board maps VSPI differently adjust id or pins.
-			self.spi = SPI(2, baudrate=1000000, polarity=0, phase=0, sck=self.sck, mosi=self.mosi, miso=self.miso)
+		self.sck=Pin(sck,Pin.OUT)
+		self.mosi=Pin(mosi,Pin.OUT)
+		self.miso=Pin(miso)
+		self.rst=Pin(rst,Pin.OUT)
+		self.cs=Pin(cs,Pin.OUT)
+		self.rst.value(0); self.cs.value(1)
+		board=uname()[0].lower()
+		if board in ('wipy','lopy','fipy'):
+			self.spi=SPI(0); self.spi.init(SPI.MASTER,baudrate=1000000,pins=(self.sck,self.mosi,self.miso))
+		elif board=='esp8266':
+			self.spi=SPI(baudrate=1000000,polarity=0,phase=0,sck=self.sck,mosi=self.mosi,miso=self.miso); self.spi.init()
+		elif board=='esp32':
+			self.spi=SPI(2,baudrate=1000000,polarity=0,phase=0,sck=self.sck,mosi=self.mosi,miso=self.miso)
 		else:
 			raise RuntimeError("Unsupported platform: {}".format(board))
-
-		# Release reset and init chip
-		self.rst.value(1)
-		self.init()
+		self.rst.value(1); self.init()
 
 	def _wreg(self, reg, val):
 
