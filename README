@@ -1,0 +1,1 @@
+execute: mpremote connect /dev/ttyUSB0 fs cp /home/altariox/Documents/SSH/mfrc522.py :
