@@ -68,3 +68,14 @@ except KeyboardInterrupt:
 finally:
     # Garantit LED éteinte quand on quitte
     led_off()
+
+# ---------------------------------------------------------------------------
+# Exemple alternatif (ancien main.py distant) : clignotement simple sur GPIO2
+# Conserver ici comme référence. Pour l'utiliser, renommer ce bloc dans un autre
+# fichier (ex: main_blink_example.py) ou commenter le code RFID ci-dessus.
+# ---------------------------------------------------------------------------
+# from machine import Pin
+# from time import sleep
+# led2 = Pin(2, Pin.OUT)
+# while True:
+#     led2.on(); sleep(1); led2.off(); sleep(1)
